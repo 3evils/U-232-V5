@@ -71,7 +71,7 @@ INSERT INTO `achievementist` (`id`, `achievname`, `notes`, `clienticon`) VALUES
 (33, 'Stick Em Up LVL3', 'Uploading at least 10 sticky torrents.', 'sticky3.png'),
 (34, 'Stick EM Up LVL4', 'Uploading at least 25 sticky torrents.', 'sticky4.png'),
 (35, 'Stick EM Up LVL5', 'Uploading at least 50 sticky torrents.', 'sticky5.png'),
-(36, 'Gag Da B1tch', 'Getting gagged like he\'s Adams Man!', 'gagged.png'),
+(36, 'Gag Da B1tch', 'Getting gagged like hes Adams Man!', 'gagged.png'),
 (37, 'Signature Setter', 'User has successfully set a signature on profile settings.', 'signature.png'),
 (38, 'Corruption Counts', 'Transferred at least 1 byte of corrupt data incoming.', 'corrupt.png'),
 (40, '7 Day Seeder', 'Seeded a snatched torrent for a total of at least 7 days.', '7dayseed.png'),
@@ -183,7 +183,26 @@ INSERT INTO `ach_bonus` (`bonus_id`, `bonus_desc`, `bonus_type`, `bonus_do`) VAL
 (32, 'Nothing', 5, '0');
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `api_keys`
+--
 
+CREATE TABLE `api_keys` (
+  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `value` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+) ENGINE=Aria DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `api_keys`
+--
+
+INSERT INTO `api_keys` (`name`, `value`) VALUES
+('omdb_key', ''),
+('tmdb_key', ''),
+('omdb_on', '0'),
+('tmdb_on', '0');
+
+-- --------------------------------------------------------
 --
 -- Table structure for table `announcement_main`
 --
@@ -2092,7 +2111,7 @@ INSERT INTO `rules` (`id`, `type`, `title`, `text`) VALUES
 (1, 1, 'General rules - Breaking these rules can and will get you banned !', '\r\nAccess to the newest torrents is conditional on a good ratio! (See the FAQ  for details.) Low ratios may result in severe consequences, including banning in extreme cases.\r\nNo duplicate accounts from the same IP. Members with more than one account for whatever reason without approval of Sysops or staff will get banned please do not make multiple  accounts!.\r\nNo aggressive behaviour or flaming in the forums.\r\nNo trashing of other peoples topics (e.g. SPAM).\r\nNo language other than English in the forums.\r\nAbsolutely no racial slurs or racist remarks will be tolerated.\r\n'),
 (2, 2, 'Forum Rules', '<ul>\r\n<li>Please, feel free to answer any questions but leave the moderating to the moderators.</li>\r\n<li>Don\'t use all capital letters, excessive !!! (exclamation marks) or ??? (question marks)... it seems like you\'re shouting.</li>\r\n<li>No posting of users stats without their consent is allowed in the forums or torrent comments regardless of ratio or class.</li>  \r\n<li>No trashing of other peoples topics.</li>\r\n<li>No systematic foul language (and none at all on titles).</li>\r\n<li>No double posting. If you wish to post again, and yours is the last post in the thread please use the EDIT function, instead of posting a double.</li>   \r\n<li>No bumping... (All bumped threads will be Locked.)</li>\r\n<li>No direct links to internet sites in the forums.</li>      \r\n<li>No images larger than 400x400, and preferably web-optimised. Use the [img ] tag for images.</li>\r\n<li>No advertising, merchandising or promotions of any sort are allowed on the site.</li>   \r\n<li>Do not tell people to read the Rules, the FAQ, or comment on their ratios and torrents.</li>    \r\n<li>No consistent off-topic posts allowed in the forums. (i.e. SPAM or hijacking)</li>\r\n<li>The Trading/Requesting of invites to other sites is forbidden in the forums.</li>  \r\n<li>Do not post links to other torrent sites or torrents on those sites.</li>    \r\n<li>Users are not allowed, under any circumstance to create their own polls in the forum.</li>    \r\n<li>No self-congratulatory topics are allowed in the forums.</li>    \r\n<li>Do not quote excessively. One quote of a quote box is sufficient.</li>    \r\n<li>Please ensure all questions are posted in the correct section!     (Game questions in the Games section, Apps questions in the Apps section, etc.)</li>    \r\n<li>Please, feel free to answer any questions.. However remain respectful to the people you help ....nobody’s better than anyone else.</li>  \r\n<li>Last, please read the FAQ before asking any questions.</li>\r\n</ul>'),
 (3, 3, 'Uploaders Rules', 'All uploaders are subject to follow the below rules in order to be a part of the  uploader team. We realize that it\'s quite a list, and for new uploaders, it might seem a bit overwhelming, but as you spend time here, they\'ll become second hat.\r\n\r\nTo apply to become a site uploader use the uploaders application form, contact staff to get the link.\r\n\r\nTorrents that do not follow the rules below will be deleted.  If you have any questions about the below rules, please feel free to PM them and I will clarify as best I can.\r\n\r\nWelcome to the team and happy uploading!\r\n\r\n<ul>\r\n<li>All Uploaders must upload a minimum of 3 unique torrents each week to retain their Uploader status.</li>\r\n<li>Failure to comply will result in a demotion, and a minimum of a 2 week blackout period where they will not be able to return to the Uploader team.</li>  \r\n<li>If, after the 2 weeks, the Uploader can prove they will be active, they will be reinstated.</li>  \r\n<li>A second instance of inactivity will be cause for permanent removal from the Uploader team.</li>\r\n<li>Extenuating circumstances will be considered if it is the cause of inactivity.  If you are going to be away, please let a staff member know so that your account is not affected.</li>\r\n<li>All torrents must be rarred, no matter what the size or type.  The ONLY exception to this is MP3s.</li>\r\n</ul>'),
-(4, 5, 'Free leech rules', '<ul>\r\n<li>From time to time we will have freeleech for 48hours. This means that when you download from site it will not count against your download ratio.</li>\r\n<li>Whatever you seed back will add to your upload ratio.</li>\r\n<li>This is a good opportunity for members with ratio\'s below 1.0 to bring them back into line</li>\r\n<li>Anyone who hit and runs on a freeleech torrent will receive a mandatory 2 week warning. You must seed all torrents downloaded to 100% or for a minimum of 48 hours this is for free leech torrents only.</li>\r\n</ul>\r\n\r\n'),
+(4, 5, 'Free leech rules', '<ul>\r\n<li>From time to time we will have freeleech for 48hours. This means that when you download from site it will not count against your download ratio.</li>\r\n<li>Whatever you seed back will add to your upload ratio.</li>\r\n<li>This is a good opportunity for members with ratios below 1.0 to bring them back into line</li>\r\n<li>Anyone who hit and runs on a freeleech torrent will receive a mandatory 2 week warning. You must seed all torrents downloaded to 100% or for a minimum of 48 hours this is for free leech torrents only.</li>\r\n</ul>\r\n\r\n'),
 (5, 4, 'Downloading rules', '<ul>\r\n<li>No comments on torrents you are not about to download.</li>\r\n<li>Once download is complete, remember to seed for as long as possible or for a minimum of 36 hours or a ratio of 1:1</li>\r\n<li>Low ratios will be given the three strike warning from staff and can lead to a total ban.</li>\r\n</ul>');
 
 -- --------------------------------------------------------
@@ -2155,17 +2174,18 @@ CREATE TABLE IF NOT EXISTS `shit_list` (
 -- Table structure for table `shoutbox`
 --
 
-CREATE TABLE IF NOT EXISTS `shoutbox` (
+CREATE TABLE `shoutbox` (
   `id` bigint(40) NOT NULL,
-  `userid` bigint(6) NOT NULL DEFAULT '0',
-  `to_user` int(10) NOT NULL DEFAULT '0',
+  `userid` bigint(6) NOT NULL DEFAULT ''0'',
+  `to_user` int(10) NOT NULL DEFAULT ''0'',
   `username` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
-  `date` int(11) NOT NULL DEFAULT '0',
+  `avatar` text COLLATE utf8_unicode_ci NOT NULL,
+  `date` int(11) NOT NULL DEFAULT ''0'',
   `text` text CHARACTER SET utf8,
   `text_parsed` text CHARACTER SET utf8,
-  `staff_shout` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
-  `autoshout` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `staff_shout` enum(''yes'',''no'') COLLATE utf8_unicode_ci NOT NULL DEFAULT ''no'',
+  `autoshout` enum(''yes'',''no'') COLLATE utf8_unicode_ci NOT NULL DEFAULT ''no''
+) ENGINE=Aria DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2530,6 +2550,60 @@ CREATE TABLE IF NOT EXISTS `topics` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `tmdb`
+--
+
+CREATE TABLE `tmdb` (
+  `movie_id` int(10) UNSIGNED NOT NULL DEFAULT ''0'',
+  `movie_likes` text CHARACTER SET utf8 NOT NULL,
+  `tv_id` int(10) UNSIGNED NOT NULL DEFAULT ''0'',
+  `tv_likes` text CHARACTER SET utf8 NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL DEFAULT ''0''
+) ENGINE=Aria DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `tmdb`
+--
+
+INSERT INTO `tmdb` (`movie_id`, `movie_likes`, `tv_id`, `tv_likes`, `user_id`) VALUES
+(0, ''0'', 60735, ''4'', 23),
+(0, '''', 4087, '''', 23),
+(0, '''', 1622, '''', 23),
+(0, '''', 1407, '''', 23),
+(0, '''', 62127, ''1'', 23),
+(0, '''', 607356666, ''1'', 23),
+(0, '''', 2734, ''1'', 23),
+(0, '''', 354912, ''1'', 23),
+(0, '''', 403119, ''1'', 23),
+(0, '''', 460793, ''1'', 23),
+(0, '''', 401981, ''1'', 23),
+(445571, ''1'', 0, '''', 23),
+(268896, ''2'', 0, '''', 26),
+(337167, ''1'', 0, '''', 26),
+(284054, ''3'', 0, '''', 23),
+(507282, ''1'', 0, '''', 23),
+(504255, ''1'', 0, '''', 23),
+(268896, ''1'', 0, '''', 23),
+(368182, ''1'', 0, '''', 23),
+(419831, ''1'', 0, '''', 23),
+(338970, ''2'', 0, '''', 23),
+(284054, ''2'', 0, '''', 26),
+(0, '''', 1402, ''1'', 26),
+(284054, ''1'', 0, '''', 1805),
+(402897, ''1'', 0, '''', 23),
+(338970, ''1'', 0, '''', 26),
+(340022, ''1'', 0, '''', 23),
+(407451, ''1'', 0, '''', 26),
+(433627, ''1'', 0, '''', 23),
+(462718, ''1'', 0, '''', 26),
+(456154, ''1'', 0, '''', 26),
+(278, ''1'', 0, '''', 26),
+(522168, ''1'', 0, '''', 26),
+(498821, ''1'', 0, '''', 26),
+(456086, ''1'', 0, '''', 26),
+(438348, ''1'', 0, '''', 26),
+(491473, ''1'', 0, '''', 26);
 
 --
 -- Table structure for table `torrents`
@@ -2822,8 +2896,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `forums_mod` varchar(320) CHARACTER SET utf8 DEFAULT NULL,
   `altnick` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `forum_sort` enum('ASC','DESC') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DESC',
-  `pm_forced` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'yes'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `pm_forced` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'no',
+     `design` int(25) NOT NULL DEFAULT '1'
+ ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 

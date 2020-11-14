@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c9241a0d-9128-4b9f-92ff-c301a3fe9389" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/bitbucket.php" beforeDir="false" afterPath="$PROJECT_DIR$/bitbucket.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bjstats.php" beforeDir="false" afterPath="$PROJECT_DIR$/bjstats.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/install/extra/install.xbt.sql" beforeDir="false" afterPath="$PROJECT_DIR$/install/extra/install.xbt.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +34,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605344625917</updated>
-      <workItem from="1605344627055" duration="383000" />
+      <workItem from="1605344627055" duration="1071000" />
     </task>
     <servers />
   </component>
