@@ -1,28 +1,35 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 function ircbot($messages)
 {
     $bot = array(
         'ip' => '127.0.0.1',
         'port' => 5631,
         'pass' => 'bWFtYWFyZW1lcmU',
-        'pidfile' => '/home/...../eggdrop/pid.U232_Bot', //path to the pid. file
+        'pidfile' => '/home/mindless/eggdrop/pid.U232_Bot', //path to the pid. file
         'sleep' => 5,
     );
     if (empty($messages)) return; //die ('Empty message');

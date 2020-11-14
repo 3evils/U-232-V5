@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 require_once ('emoticons.php');
 function source_highlighter($source, $lang2geshi)
 {
@@ -97,7 +104,7 @@ function validate_imgs($s){
     $end = "+\.(?:jpe?g|png|gif)";
     preg_match_all("!" . $start . "(.*)" . $end . "!Ui", $s, $result);
     $array = $result[0];
-    for ($i = 0; $i < count($array); $i++) {
+    for ($i = 0, $iMax = count($array); $i < $iMax; $i++) {
         $headers = @get_headers($array[$i]);
         if (strpos($headers[0], "200") === false) {
             $s = str_replace("[img]" . $array[$i] . "[/img]", "", $s);
@@ -143,7 +150,7 @@ function format_quotes($s)
     $closeval = array();
     $pos = - 1;
     foreach ($closequote as $val) $closeval[] = $pos = strpos($s, $val, $pos + 1);
-    for ($i = 0; $i < count($openval); $i++) if ($openval[$i] > $closeval[$i]) return $s; // Cannot close before opening. Return raw string...
+    for ($i = 0, $iMax = count($openval); $i < $iMax; $i++) if ($openval[$i] > $closeval[$i]) return $s; // Cannot close before opening. Return raw string...
             $s = str_replace("[quote]", "<blockquote><cite>Quote:</cite>", $s);
 			$s = preg_replace("/\\[quote=(.+?)\\]/", "<blockquote><cite>\\1 wrote:</cite>", $s);
             $s = str_replace("[/quote]", "<br /></blockquote>", $s);
@@ -175,7 +182,7 @@ function islocal($link)
         $l[1] = substr($title, strlen($title) - round($limit / 3));
         $lshort = $l[0] . "..." . $l[1];
     } else $lshort = $title;
-    return "&nbsp;<a href=\"" . ((stristr($url, $INSTALLER09['url']) !== false) ? "" : "https://anonym.to/?") . $url . "\" target=\"_blank\">" . $lshort . "</a>";
+    return "&nbsp;<a href=\"" . ((stristr($url, $INSTALLER09['url']) !== false) ? "" : "http://nullrefer.com/?") . $url . "\" target=\"_blank\">" . $lshort . "</a>";
 }
 function format_urls($s)
 {
@@ -252,7 +259,8 @@ function format_comment($text, $strip_html = true, $urls = true, $images = true)
         '<span style="color:\1;">\2</span>',
         '<span style="color:\1;">\2</span>',
         '<span style="font-family:\'\1\';">\2</span>',
-        '<table cellspacing="0" cellpadding="10"><tr><td class="forum_head_dark" style="padding:5px">Spoiler! to view, roll over the spoiler box.</td></tr><tr><td class="spoiler"><a href="#">\\1</a></td></tr></table><br />',
+            '<script type="text/javascript"> function showSpoiler(obj) { var inner = obj.parentNode.getElementsByTagName("div")[0]; if (inner.style.display == "none") inner.style.display = ""; else inner.style.display = "none";}</script>
+    <div class="spoiler"><br><input onclick="showSpoiler(this);" value="Show / Hide" type="button"><div class="inner" style="display: none;"><a href="#">\\1</a></div></div>',
         '<iframe width="500" height="410" src="https://www.youtube.com/embed/\\1" frameborder="0" allowfullscreen></iframe>',
         "<embed style=\"width:500px; height:410px;\" id=\"VideoPlayback\" align=\"middle\" type=\"application/x-shockwave-flash\" src=\"http://video.google.com/googleplayer.swf?docId=\\1\" allowScriptAccess=\"sameDomain\" quality=\"best\" bgcolor=\"#ffffff\" scale=\"noScale\" wmode=\"window\" salign=\"TL\"  FlashVars=\"playerMode=embedded\"> </embed>",
         '<span style="text-align: center;"><p>Audio From: \1</p><embed type="application/x-shockwave-flash" src="http://www.google.com/reader/ui/3247397568-audio-player.swf?audioUrl=\\1" width="400" height="27" allowscriptaccess="never" quality="best" bgcolor="#ffffff" wmode="window" flashvars="playerMode=embedded" /></span>',
@@ -337,7 +345,8 @@ function textbbcode($form, $text, $content = "")
 {
     global $CURUSER, $INSTALLER09;
     $custombutton = '';
-    if (get_smile() != '0') $custombutton.= " <span style='font-weight:bold;font-size:8pt;'><a href=\"javascript:PopCustomSmiles('".$form."','".$text."')\">[ Custom Smilies ]</a></span>";
+    if (get_smile() != '0') 
+		$custombutton.= " <span style='font-weight:bold;font-size:8pt;'><a href=\"javascript:PopCustomSmiles('".$form."','".$text."')\">[ Custom Smilies ]</a></span>";
     $smilebutton = "<a href=\"javascript:PopMoreSmiles('".$form."','".$text."')\">[ More Smilies ]</a>";
     $bbcodebody = <<<HTML
 <script type="text/javascript">
@@ -346,7 +355,7 @@ function textbbcode($form, $text, $content = "")
 <script type="text/javascript" src="./scripts/textbbcode.js"></script>
 <div id="hover_pick" style="width:25px; height:25px; position:static; border:1px solid #333333; display:none; z-index:20;"></div>
 <div id="pickerholder"></div>
-<table border='0' cellspacing='0' cellpadding='5' class='tborder'>
+<table border='0' cellspacing='0' cellpadding='5' class='table'>
   <tr>
     <td width="100%" class="theadtop" colspan="2"><div style="float:left;padding:4px 0px 0px 2px;">
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-bold" onclick="tag('b')" title="Bold" alt="B" ></i></span>&nbsp;&nbsp;
@@ -354,14 +363,14 @@ function textbbcode($form, $text, $content = "")
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-underline" onclick="tag('u')" title="Underline" alt="U"></i></span>&nbsp;&nbsp;
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-strikethrough" onclick="tag('s')" title="Strike" alt="S"></i></span>&nbsp;&nbsp;
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-link" onclick="clink()" title="Link" alt="Link"></i></span>&nbsp;&nbsp;
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-picture-o" onclick="cimage()" title="Image" alt="Image"></i></span>&nbsp;&nbsp;
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-pencil" onclick="colorpicker();" title="Select Color" alt="Colors"></i></span>&nbsp;&nbsp;
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-envelope-o" onclick="mail()" title="Add email" alt="Email"></i></span>&nbsp;&nbsp;
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-camera" onclick="cimage()" title="Image" alt="Image"></i></span>&nbsp;&nbsp;
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-cogs" onclick="colorpicker();" title="Select Color" alt="Colors"></i></span>&nbsp;&nbsp;
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-envelope" onclick="mail()" title="Add email" alt="Email"></i></span>&nbsp;&nbsp;
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-code" onclick="tag('php')" title="Add code" alt="Code"></i></span>&nbsp;&nbsp;
 	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-quote-right" onclick="tag('quote')" title="Quote" alt="Quote"></i></span>&nbsp;&nbsp;
 HTML;
     if ($CURUSER['class'] >= UC_MODERATOR) $bbcodebody.= <<<HTML
-	<span id="clickableAwesomeFont"><i class="fa fa-shield"  onclick="tag('mcom')" title="Mod comment" alt="Mod comment"></i></span>
+	<span id="clickableAwesomeFont"><i class="far fa-shield"  onclick="tag('mcom')" title="Mod comment" alt="Mod comment"></i></span>
 HTML;
     $bbcodebody.= <<<HTML
 </div>
@@ -405,10 +414,10 @@ HTML;
         </select>
       </div>
       <div style="float:right;padding:4px 2px 0px 0px;"> 
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-level-up" onclick="text('up')" title="To Uppercase" alt="Up"></i></span>&nbsp;&nbsp;
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-level-down" onclick="text('low')" title="To Lowercase" alt="Low"></i></span>&nbsp;&nbsp;
-<!--	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-search-plus" onclick="fonts('up')" title="Font size up" alt="S up"></i></span>&nbsp;&nbsp;
-	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fa fa-search-minus" onclick="fonts('down')" title="Font size up" alt="S down"></i></span>&nbsp;&nbsp;-->
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fas fa-level-up" onclick="text('up')" title="To Uppercase" alt="Up"></i></span>&nbsp;&nbsp;
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fas fa-level-down" onclick="text('low')" title="To Lowercase" alt="Low"></i></span>&nbsp;&nbsp;
+<!--	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fas fa-search-plus" onclick="fonts('up')" title="Font size up" alt="S up"></i></span>&nbsp;&nbsp;
+	<span id="clickableAwesomeFont"><i style="font-size: 16px;" class="fas fa-search-minus" onclick="fonts('down')" title="Font size up" alt="S down"></i></span>&nbsp;&nbsp;-->
 </div></td>
   </tr>
   <tr>

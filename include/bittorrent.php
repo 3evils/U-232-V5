@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 //==Start execution time
 $start = microtime(true);
 if( !file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'config.php') ) {
@@ -23,11 +30,13 @@ if( !file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'config.php') ) {
     die();
 }
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'config.php');
+require_once (INCL_DIR . 'bbcode_functions.php');
 require_once (CACHE_DIR . 'free_cache.php');
 require_once (CACHE_DIR . 'site_settings.php');
 require_once (CACHE_DIR . 'staff_settings.php');
 require_once (CACHE_DIR . 'class_config.php');
 //==Start memcache
+
 require_once (CLASS_DIR . 'class_cache.php');
 require_once(CLASS_DIR.'class.crypt.php');
 $mc1 = NEW CACHE();
@@ -56,15 +65,6 @@ if (preg_match('/(?:\< *(?:java|script)|script\:|\+document\.)/i', serialize($_C
   die('Forbidden');
 //==
 
-function cleanquotes($in) //Strip slashes updated to php7.4 
-{
-    $in = is_array($in) ? array_map('cleanquotes', $in) : stripslashes($in);
-        return $in;
-}
-array_walk($_GET, 'cleanquotes');
-array_walk($_POST, 'cleanquotes');
-array_walk($_COOKIE, 'cleanquotes');
-array_walk($_REQUEST, 'cleanquotes');
 //== Updated 02/215
 function htmlsafechars($txt = '')
 {
@@ -147,10 +147,17 @@ function status_change($id)
 {
     sql_query('UPDATE announcement_process SET status = 0 WHERE user_id = ' . sqlesc($id) . ' AND status = 1');
 }
+
 function hashit($var, $addtext = "")
 {
     return md5("Th15T3xt" . $addtext . $var . $addtext . "is5add3dto66uddy6he@water...");
 }
+/*
+function hashit($var)
+{
+    return password_hash($var, PASSWORD_BCRYPT);
+}
+*/
 //== check bans by djGrrr <3 pdq
 function check_bans($ip, &$reason = '')
 {
@@ -185,7 +192,7 @@ function userlogin()
     $nip = ip2long($ip);
     $ipf = $_SERVER['REMOTE_ADDR'];
     if (isset($CURUSER)) return;
-    if (!$INSTALLER09['site_online'] || !get_mycookie('uid') || !get_mycookie('pass') || !get_mycookie('hashv')) return;
+    if (!$INSTALLER09['site_online'] || !get_mycookie('uid') || !get_mycookie('pass')) return;
     $id = intval(get_mycookie('uid'));
     if (!$id OR (strlen(get_mycookie('pass')) != 32) OR (get_mycookie('hashv') != hashit($id, get_mycookie('pass')))) return;
     // let's cache $CURUSER - pdq - *Updated*
@@ -195,8 +202,6 @@ function userlogin()
             'added',
             'last_login',
             'last_access',
-            'curr_ann_last_check',
-            'curr_ann_id',
             'stylesheet',
             'class',
             'override_class',
@@ -261,7 +266,8 @@ function userlogin()
             'wait_time',
             'torrents_limit',
             'peers_limit',
-            'torrent_pass_version'
+            'torrent_pass_version',
+			'design'
         );
         $user_fields_ar_float = array(
             'time_offset',
@@ -345,10 +351,11 @@ function userlogin()
             'forums_mod',
             'altnick',
             'forum_sort',
-            'pm_forced'
+            'pm_forced',
+            'snow'
         );
         $user_fields = implode(', ', array_merge($user_fields_ar_int, $user_fields_ar_float, $user_fields_ar_str));
-         $res = sql_query("SELECT {$user_fields}, ann_main.subject AS curr_ann_subject, ann_main.body AS curr_ann_body " . "FROM users AS u " . "LEFT JOIN announcement_main AS ann_main " . "ON ann_main.main_id = u.curr_ann_id " . "WHERE u.id = " . sqlesc($id)." AND u.enabled='yes' AND u.status = 'confirmed'") or sqlerr(__FILE__, __LINE__);
+         $res = sql_query("SELECT {$user_fields} FROM users AS u " . "WHERE u.id = " . sqlesc($id)." AND u.enabled='yes' AND u.status = 'confirmed'") or sqlerr(__FILE__, __LINE__);
         if (mysqli_num_rows($res) == 0) {
             $salty = md5("Th15T3xtis5add3dto66uddy6he@water..." . $row['username'] . "");
             header("Location: {$INSTALLER09['baseurl']}/logout.php?hash_please={$salty}");
@@ -370,111 +377,7 @@ function userlogin()
         return;
     }
 
-    //If curr_ann_id > 0 but curr_ann_body IS NULL, then force a refresh
-    if (($row['curr_ann_id'] > 0) AND ($row['curr_ann_body'] == NULL)) {
-    $row['curr_ann_id'] = 0;
-    $row['curr_ann_last_check'] = 0;
-    }
-    // If elapsed > 10 minutes, force a announcement refresh.
-    if (($row['curr_ann_last_check'] != 0) AND ($row['curr_ann_last_check'] < $dt - 900))
-    $row['curr_ann_last_check'] = 0;
-    
-             if (($row['curr_ann_id'] == 0) AND ($row['curr_ann_last_check'] == 0))
-             { // Force an immediate check...
-                     $query = sprintf('SELECT m.*,p.process_id FROM announcement_main AS m '.
-                             'LEFT JOIN announcement_process AS p ON m.main_id = p.main_id '.
-                             'AND p.user_id = %s '.
-                             'WHERE p.process_id IS NULL '.
-                             'OR p.status = 0 '.
-                             'ORDER BY m.main_id ASC '.
-                             'LIMIT 1',
-            sqlesc($row['id']));
-            $result = sql_query($query);
-            if (mysqli_num_rows($result))
-            { // Main Result set exists
-            $ann_row = mysqli_fetch_assoc($result);
-            $query = sqlesc($ann_row['sql_query']);
-            // Ensure it only selects...
-            if (!preg_match('/\\ASELECT.+?FROM.+?WHERE.+?\\z/', $query)) die('Oops, Query error');
-            // The following line modifies the query to only return the current user
-            // row if the existing query matches any attributes.
-            $query .= ' AND u.id = '.sqlesc($row['id']).' LIMIT 1';
-            $result = sql_query($query);
-            if (mysqli_num_rows($result))
-            { // Announcement valid for member
-            $row['curr_ann_id'] = (int)$ann_row['main_id'];
-            // Create two row elements to hold announcement subject and body.
-            $row['curr_ann_subject'] = htmlsafechars($ann_row['subject']);
-            $row['curr_ann_body'] = htmlsafechars($ann_row['body']);
-            // Create additional set for main UPDATE query.
-            $add_set = ', curr_ann_id = '.sqlesc($ann_row['main_id']);
-            $mc1->begin_transaction('user' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-                'curr_ann_id' => $ann_row['main_id']
-            ));
-            $mc1->commit_transaction($INSTALLER09['expires']['user_cache']);
-            $mc1->begin_transaction('MyUser_' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-                'curr_ann_id' => $ann_row['main_id']
-            ));
-            $mc1->commit_transaction($INSTALLER09['expires']['curuser']);
-            $status = 2;
-            //$status = 0;
-            }
-            else
-            {
-            // Announcement not valid for member...
-            $add_set = ', curr_ann_last_check = '.sqlesc($dt);
-            $mc1->begin_transaction('user' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-                'curr_ann_last_check' => $dt
-            ));
-            $mc1->commit_transaction($INSTALLER09['expires']['user_cache']);
-            $mc1->begin_transaction('MyUser_' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-                'curr_ann_last_check' => $dt
-            ));
-            $mc1->commit_transaction($INSTALLER09['expires']['curuser']);
-            $status = 1;
-            }
-            // Create or set status of process
-            if ($ann_row['process_id'] === NULL)
-            {
-            // Insert Process result set status = 1 (Ignore)
-            $query = sprintf('INSERT INTO announcement_process (main_id, '.
-            'user_id, status) VALUES (%s, %s, %s)',
-            sqlesc($ann_row['main_id']),
-            sqlesc($row['id']),
-            sqlesc($status));
-            }
-            else
-            {
-            // Update Process result set status = 2 (Read)
-            $query = sprintf('UPDATE announcement_process SET status = %s '.
-            'WHERE process_id = %s',
-            sqlesc($status),
-            sqlesc($ann_row['process_id']));
-            }
-            sql_query($query);
-            }
-            else
-            {
-            // No Main Result Set. Set last update to now...
-            $add_set = ', curr_ann_last_check = '.sqlesc($dt);
-            $mc1->begin_transaction('user' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-            'curr_ann_last_check' => $dt
-        ));
-            $mc1->commit_transaction($INSTALLER09['expires']['user_cache']);
-            $mc1->begin_transaction('MyUser_' . $CURUSER['id']);
-            $mc1->update_row(false, array(
-            'curr_ann_last_check' => $dt
-        ));
-            $mc1->commit_transaction($INSTALLER09['expires']['curuser']);
-            }
-            unset($result);
-            unset($ann_row);
-    }
+   
     // bans by djGrrr <3 pdq
     if (!isset($row['perms']) || (!($row['perms'] & bt_options::PERMS_BYPASS_BAN))) {
         $banned = false;
@@ -522,9 +425,9 @@ function userlogin()
         }
     }
     // user stats - *Updated*
-    $What_Cache = (XBT_TRACKER == true ? 'userstats_xbt_' : 'userstats_');
+    $What_Cache = (XBT_TRACKER == true ? 'userstats_ocelot_' : 'userstats_');
     if (($stats = $mc1->get_value($What_Cache.$id)) === false) {
-    $What_Expire = (XBT_TRACKER == true ? $INSTALLER09['expires']['u_stats_xbt'] : $INSTALLER09['expires']['u_stats']);
+    $What_Expire = (XBT_TRACKER == true ? $INSTALLER09['expires']['u_stats_ocelot'] : $INSTALLER09['expires']['u_stats']);
         $stats_fields_ar_int = array(
             'uploaded',
             'downloaded'
@@ -624,7 +527,7 @@ function userlogin()
     $add_set = (isset($add_set)) ? $add_set : '';
      if (($row['last_access'] != '0') AND (($row['last_access']) < ($dt - 180))/** 3 mins **/ || ($row['ip'] !== $ip)) 
     {
-        sql_query("UPDATE users SET where_is =" . sqlesc($whereis) . ", ip=".sqlesc($ip).$add_set.", last_access=" . TIME_NOW . ", $userupdate0, $userupdate1 WHERE id=" . sqlesc($row['id']));
+        sql_query("UPDATE users SET where_is =" . sqlesc($whereis) . ", ip=".sqlesc($ip).", last_access=" . TIME_NOW . ", $userupdate0, $userupdate1 WHERE id=" . sqlesc($row['id'])) or sqlerr(__FILE__, __LINE__);
         $mc1->begin_transaction('MyUser_' . $row['id']);
         $mc1->update_row(false, array(
             'last_access' => TIME_NOW,
@@ -653,14 +556,14 @@ function userlogin()
 function charset()
 {
     global $CURUSER, $INSTALLER09;
-    $lang_charset = isset($CURUSER['language']) ? "{$CURUSER['language']}" : $INSTALLER09['language'];
+    $lang_charset = $CURUSER['language'];
     switch ($lang_charset) {
     case ($lang_charset == 2):
-        return "UTF-8";
-	//case ($lang_charset == 3):
-      //return "ISO-8859-17";
-	//case ($lang_charset == 4):
-	//return "ISO-8859-15";
+        return "ISO-8859-1";
+    case ($lang_charset == 3):
+        return "ISO-8859-17";
+    case ($lang_charset == 4):
+		return "ISO-8859-15";
     default:
         return "UTF-8";
     }
@@ -828,7 +731,7 @@ function delete_id_keys($keys, $keyname = false)
     $mc1->delete_value($keyname . $id);
     return true;
 }
-function unesc($x)   //updated to php 7.4
+function unesc($x)
 {
     $x = is_array($x) ? array_map('unesc', $x) : stripslashes($x);
     return $x;
@@ -997,9 +900,7 @@ function sqlerr($file = '', $line = '')
         $_error_string.= "\n IP Address: " . $_SERVER['REMOTE_ADDR'];
         $_error_string.= "\n in file " . $file . " on line " . $line;
         $_error_string.= "\n URL:" . $_SERVER['REQUEST_URI'];
-		$error_username = isset($CURUSER['username']) ? $CURUSER['username'] : '';
-		$error_userid = isset($CURUSER['id']) ? $CURUSER['id'] : '';
-        $_error_string.= "\n Username: {$error_username}[{$error_userid}]";
+        $_error_string.= "\n Username: {$CURUSER['username']}[{$CURUSER['id']}]";
         if ($FH = @fopen($INSTALLER09['sql_error_log'], 'a')) {
             @fwrite($FH, $_error_string);
             @fclose($FH);
@@ -1276,8 +1177,6 @@ function write_bonus_log($userid, $amount, $type){
   $donation_type = $type;
   sql_query("INSERT INTO bonuslog (id, donation, type, added_at) VALUES(".sqlesc($userid).", ".sqlesc($amount).", ".sqlesc($donation_type).", $added)") or sqlerr(__FILE__, __LINE__);
 }
-
-/*
 //IMDB Function with memcache
 function get_imdb($imdburl) {
     global $INSTALLER09, $mc1;
@@ -1308,7 +1207,7 @@ function get_imdb($imdburl) {
             $gen = $movie->genres();
             if (!empty($gen)) {
                 //Changed count($gen) for 4 to limit to only two genres to help keep it tidy on site
-                for ($i = 0; $i + 1 < count($gen); $i++) {
+                for ($i = 0, $loopsMax = count($gen); $i + 1 < $loopsMax; $i++) {
                     $imdb_info['gen'] .= "$gen[$i], ";
                 }
                 $imdb_info['gen'] .= "$gen[$i]";
@@ -1325,7 +1224,7 @@ function get_imdb($imdburl) {
 
             $country = $movie->country();
             if (!empty($country)) {
-                for ($i = 0; $i + 1 < count($country); $i++) {
+                for ($i = 0, $loopsMax = count($country); $i + 1 < $loopsMax; $i++) {
                     $imdb_info['country'] .= "$country[$i], ";
                 }
                 $imdb_info['country'] .= "$country[$i]";
@@ -1342,37 +1241,37 @@ function get_imdb($imdburl) {
 
             $director = $movie->director();
             if (!empty($director)) {
-                for ($i = 0; $i < count($director); $i++) {
-                    $imdb_info['director'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $director[$i]["imdb"] . "" . "\">" . "" . $director[$i]["name"] . "" . "</a>, ";
+                for ($i = 0, $iMax = count($director); $i < $iMax; $i++) {
+                    $imdb_info['director'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $director[$i]["imdb"] . "" . "\">" . "" . $director[$i]["name"] . "" . "</a>, ";
                 }
-                $imdb_info['director'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $director[$i]["imdb"] . "" . "\">" . "" . $director[$i]["name"] . "" . "</a> ";
+                $imdb_info['director'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $director[$i]["imdb"] . "" . "\">" . "" . $director[$i]["name"] . "" . "</a> ";
             } else {
                 $imdb_info['director'] = "None Available";
             }
 
             $produce = $movie->producer();
             if (!empty($produce)) {
-                for ($i = 0; $i < count($produce); $i++) {
-                    $imdb_info['produce'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $produce[$i]["imdb"] . "" . " \">" . "" . $produce[$i]["name"] . "" . "</a>,";
+                for ($i = 0, $iMax = count($produce); $i < $iMax; $i++) {
+                    $imdb_info['produce'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $produce[$i]["imdb"] . "" . " \">" . "" . $produce[$i]["name"] . "" . "</a>,";
                 }
-                $imdb_info['produce'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $produce[$i]["imdb"] . "" . " \">" . "" . $produce[$i]["name"] . "" . "</a>";
+                $imdb_info['produce'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $produce[$i]["imdb"] . "" . " \">" . "" . $produce[$i]["name"] . "" . "</a>";
             } else {
                 $imdb_info['produce'] = "None Available";
             }
 
             $write = $movie->writing();
             if (!empty($write)) {
-                for ($i = 0; $i < count($write); $i++) {
-                    $imdb_info['write'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $write[$i]["imdb"] . "" . "\">" . "" . $write[$i]["name"] . "" . "</a>, ";
+                for ($i = 0, $iMax = count($write); $i < $iMax; $i++) {
+                    $imdb_info['write'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $write[$i]["imdb"] . "" . "\">" . "" . $write[$i]["name"] . "" . "</a>, ";
                 }
-                $imdb_info['write'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $write[$i]["imdb"] . "" . "\">" . "" . $write[$i]["name"] . "" . "</a> ";
+                $imdb_info['write'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $write[$i]["imdb"] . "" . "\">" . "" . $write[$i]["name"] . "" . "</a> ";
             } else {
             	$imdb_info['write'] .= "N/A";
             }
             $compose = $movie->composer();
             if (!empty($compose)) {
-                for ($i = 0; $i < count($compose); $i++) {
-                    $imdb_info['compose'] .= "<a target=\"_blank\" href=\"http://www.imdb.com/name/nm" . "" . $compose[$i]["imdb"] . "" . " \">" . "" . $compose[$i]["name"] . "" . "</a>, ";
+                for ($i = 0, $iMax = count($compose); $i < $iMax; $i++) {
+                    $imdb_info['compose'] .= "<a target=\"_blank\" href=\"https://www.imdb.com/name/nm" . "" . $compose[$i]["imdb"] . "" . " \">" . "" . $compose[$i]["name"] . "" . "</a>, ";
                 }
             } else {
                 $imdb_info['compose'] .= "N/A";
@@ -1386,7 +1285,7 @@ function get_imdb($imdburl) {
 
             $plot = $movie->plot();
             if (!empty($plot)) {
-                for ($i = 0; $i < count($plot); $i++) {
+                for ($i = 0, $iMax = count($plot); $i < $iMax; $i++) {
                     $imdb_info['plot'] .= str_replace(array("&", "<p>", "</p>"), array("&amp;", "", ""), "$plot[$i]<br /><br />");
                 }
             } else {
@@ -1395,7 +1294,7 @@ function get_imdb($imdburl) {
 
             $trailers = $movie->trailers();
             if (!empty($trailers)) {
-                for ($i = 0; $i < count($trailers); $i++) {
+                for ($i = 0, $iMax = count($trailers); $i < $iMax; $i++) {
                     $imdb_info['trailers'] .= "<a href='" . $trailers[$i] . "' title='Trailer' target='_blank'>IMDB Trailer</a><br />";
                 }
                 $imdb_info['trailers'] .= "<a href='" . $trailers[$i] . "' title='Trailer' target='_blank'>IMDB Trailer</a>";
@@ -1417,5 +1316,29 @@ function get_imdb($imdburl) {
         }}
     return $imdb_info;
 }
-*/
+function replaceInFile($what, $with, $file){
+    $buffer = "";
+    $fp = file($file);
+    foreach($fp as $line){
+        $buffer .= preg_replace("|".$what."|i", $with, $line);
+    }
+    file_put_contents($file, $buffer);
+}
+function load_design($file = '')
+{
+    global $INSTALLER09, $CURUSER;
+    if (!isset($GLOBALS['CURUSER']) OR empty($GLOBALS['CURUSER']['design'])) {
+        if (!file_exists("./design/1/html_content.php")) {
+            stderr('System Error', 'Can\'t find design files');
+        }
+        require_once ("./design/1/html_content.php");
+        return $design;
+    }
+    if (!file_exists("./design/1/html_content.php")) {
+        stderr('System Error', 'Can\'t find design files');
+    } else {
+        require_once DESIGN_DIR . "{$CURUSER['design']}/html_content.php";
+    }
+    return $design;
+}
 ?>

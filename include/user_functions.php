@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 //=== Anonymous function
 function get_anonymous()
 {
@@ -302,7 +309,7 @@ function format_username($user, $icons = true)
     if ($user['id'] == 0) return 'System';
     elseif ($user['username'] == '') return 'unknown[' . $user['id'] . ']';
     $username = '<span style="color:#' . get_user_class_color($user['class']) . ';"><b>' . htmlsafechars($user['username']) . '</b></span>';
-    $str = '<span style="white-space: nowrap;"><a class="user_' . $user['id'] . '" href="' . $INSTALLER09['baseurl'] . '/userdetails.php?id=' . $user['id'] . '" target="_blank">' . $username . '</a>';
+    $str = '<span style="white-space: nowrap;"><a class="user_' . $user['id'] . '" href="' . $INSTALLER09['baseurl'] . '/userdetails.php?id=' . $user['id'] . '" target="_blank">' .$username. '</a>';
     if ($icons != false) {
         $str.= ($user['donor'] == 'yes' ? '<img src="' . $INSTALLER09['pic_base_url'] . 'star.png" alt="Donor" title="Donor" />' : '');
         $str.= ($user['warned'] >= 1 ? '<img src="' . $INSTALLER09['pic_base_url'] . 'alertred.png" alt="Warned" title="Warned" />' : '');
@@ -323,10 +330,10 @@ function member_ratio($up, $down)
 {
     switch (true) {
     case ($down > 0 && $up > 0):
-        $ratio = '<span style="color:' . get_ratio_color($up / $down) . ';">' . number_format($up / $down, 3) . '</span>';
+        $ratio = '<span style="color:' . get_ratio_color($up / $down) . ';">' . number_format($up / $down, 2) . '</span>';
         break;
     case ($down > 0 && $up == 0):
-        $ratio = '<span style="color:' . get_ratio_color(1 / $down) . ';">' . number_format(1 / $down, 3) . '</span>';
+        $ratio = '<span style="color:' . get_ratio_color(1 / $down) . ';">' . number_format(1 / $down, 2) . '</span>';
         break;
     case ($down == 0 && $up > 0):
         $ratio = '<span style="color: ' . get_ratio_color($up / 1) . ';">Inf</span>';
@@ -453,6 +460,28 @@ function get_cache_config_data($the_names,$the_colors,$the_images)
           }
         }
     } 
+/*
+$INSTALLER09['expires']['topicmods'] = 20;
+function topicmods($id,$utopics,$read = false) {
+            global $INSTALLER09, $mc1;
+
+            array();
+            if (($topics = $mc1-> get_value('topic_mods_')) === false) {
+            if(!$read) {
+                    $topics[$id] = $utopics;
+                    $mc1 -> cache_value('topic_mods_', $topics, $INSTALLER09['expires']['topicmods']);
+                    return $topics;
+            } else {
+            if(array_key_exists($id,$topics)) { 
+               return $topics[(int)$id]; 
+               } else { 
+           return 0; 
+          }
+        }
+    }
+}
+*/
+
   function forummods($forced = false)
 {
 		global $INSTALLER09;
@@ -479,5 +508,36 @@ function get_cache_config_data($the_names,$the_colors,$the_images)
 		if($forced == false)
 		return  unserialize(file_get_contents($file));
 }
+/*
+  $INSTALLER09['expires']['forummods'] = 20; //== 20 seconds to test the cunt
+    function forummods($forced = false) {
+                        global $INSTALLER09, $mc1;
+  
+                                if (($forums = $mc1-> get_value('forummods')) === false || $forced == true) {
+                                $q = sql_query("SELECT id,username,forums_mod FROM users WHERE forum_mod = 'yes' ") or sqlerr(__FILE__, __LINE__);
+                                while($a = mysqli_fetch_assoc($q))
+                                        $users[] = $a;
+                               
+                                $forums = array();
+                               
+                                foreach($users as $user)
+                                {
+                                        $reg = "([0-9]+)";
+                                        preg_match_all($reg,$user["forums_mod"],$fids);
+                                        foreach($fids[0] as $fid)
+                                        {
+                                                if(!array_key_exists($fid,$forums))
+                                                        $forums[$fid] = array();
+                                                $forums[$fid][] = array($user["id"],$user["username"]);
+                                        }
+                                }
+                                $mc1 -> cache_value('forummods', $forums, $INSTALLER09['expires']['forummods']);
+                                return $forums;
+                        } else {
+                        if($forced == false)
+                        return $mc1-> get_value('forummods');
+                        }
+    }
+*/
 /** end functions **/
 ?>

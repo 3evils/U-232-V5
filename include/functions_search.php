@@ -1,21 +1,22 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+     _   _   _   _     _   _   _   _   _   _   _ 
+ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+| E | v | i | l )-| T | r | i | n | i | t | y )
+ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+
+*/
 function searchfield($entry)
 {
     static $drop_char_match = array(
@@ -97,7 +98,7 @@ function searchfield($entry)
     //
     // Filter out strange characters like ^, $, &, change "it's" to "its"
     //
-    for ($i = 0; $i < sizeof($drop_char_match); $i++) {
+    for ($i = 0, $iMax = sizeof($drop_char_match); $i < $iMax; $i++) {
         $entry = str_replace($drop_char_match[$i], $drop_char_replace[$i], $entry);
     }
     return $entry;
@@ -141,7 +142,7 @@ function search_text_in_db($searchstr, $base_sql, $where_search, $add_where = ar
     $current_match_type = 'and';
     $word_match = array();
     $result_list = array();
-    for ($i = 0; $i < sizeof($split_search); $i++) {
+    for ($i = 0, $iMax = sizeof($split_search); $i < $iMax; $i++) {
         if (utf_strlen(str_replace(array(
             '*',
             '%'

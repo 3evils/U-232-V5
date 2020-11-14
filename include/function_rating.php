@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 //putyn's rate mod
 function getRate($id, $what)
 {
@@ -34,15 +41,13 @@ function getRate($id, $what)
     //== lets memcache $count fucker
     $keys['rating_count'] = 'rating_count_' . $what . '_' . $id . '_' . $CURUSER['id'];
     if (($completecount = $mc1->get_value($keys['rating_count'])) === false) {
-    $completeres = sql_query("SELECT * FROM " . (XBT_TRACKER == true ? "xbt_peers" : "snatched") . " WHERE " . (XBT_TRACKER == true ? "completedtime !=0" : "complete_date !=0") . " AND " . (XBT_TRACKER == true ? "uid" : "userid") . " = " . $CURUSER['id'] . " AND " . (XBT_TRACKER == true ? "tid" : "torrentid") . " = " . $id);
+    $completeres = sql_query("SELECT * FROM " . (XBT_TRACKER == true ? "xbt_files_users" : "snatched") . " WHERE " . (XBT_TRACKER == true ? "completedtime !=0" : "complete_date !=0") . " AND " . (XBT_TRACKER == true ? "uid" : "userid") . " = " . $CURUSER['id'] . " AND " . (XBT_TRACKER == true ? "fid" : "torrentid") . " = " . $id);
     $completecount = mysqli_num_rows($completeres);
     $mc1->cache_value($keys['rating_count'], $completecount, 180);
     }
     // outputs
-	$rating_count = isset($rating_cache["count"]) ? $rating_cache["count"] : 0;
-	$p = ($rating_count > 0 ? round((($rating_cache["sum"] / $rating_count) * 20) , 2) : 0);
-	$rating_r = isset($rating_cache["rated"]) ? $rating_cache["rated"] : '';
-    if ($rating_r) $rate = "<ul class=\"star-rating\" title=\"You rated this " . $what . " " . htmlsafechars($rating_cache["rating"]) . " star" . (htmlsafechars($rating_cache["rating"]) > 1 ? "s" : "") . "\"><li style=\"width: " . $p . "%;\" class=\"current-rating\">.</li></ul>";
+    $p = ($rating_cache["count"] > 0 ? round((($rating_cache["sum"] / $rating_cache["count"]) * 20) , 2) : 0);
+    if ($rating_cache["rated"]) $rate = "<ul class=\"star-rating\" title=\"You rated this " . $what . " " . htmlsafechars($rating_cache["rating"]) . " star" . (htmlsafechars($rating_cache["rating"]) > 1 ? "s" : "") . "\"><li style=\"width: " . $p . "%;\" class=\"current-rating\">.</li></ul>";
     elseif ($what == 'torrent' && $completecount == 0) $rate = "<ul class=\"star-rating\" title=\"You must download this " . $what . " in order to rate it.\"><li style=\"width: " . $p . "%;\" class=\"current-rating\">.</li></ul>";
     else {
         $i = 1;

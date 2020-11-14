@@ -1,21 +1,22 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+     _   _   _   _     _   _   _   _   _   _   _ 
+ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+| E | v | i | l )-| T | r | i | n | i | t | y )
+ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+
+*/
 function linkcolor($num)
 {
     if (!$num) return "red";
@@ -92,9 +93,9 @@ function torrenttable($res, $variant = "index")
             $prevdate = get_date($row['added'], 'DATE');
         }
         $imdb = "<b>IMDB:&nbsp;".(preg_match('/imdb.com.*tt\d{2,}/i', $row['url']) ? "<a href='{$row['url']}' target='_blank'>Click Here</a>" : "None listed")."</b><br />";
-$htmlout .= "<div class='container'><div class='row'>
-<div class='col-sm-3 col-sm-offset-0 panel panel-default browsep'>";
-$htmlout.="<br /><table class='table table-bordered' >";
+$htmlout .= "<div class='row medium-unstack'>
+<div class='medium-6 large-3 small-offset-0 columns callout'>";
+$htmlout.="<br /><table class='table' >";
 $id = (int)$row["id"];
         foreach ($slot as $sl) $slots_check = ($sl['torrentid'] == $id && $sl['free'] == 'yes' OR $sl['doubleup'] == 'yes');
         if ($row["sticky"] == "yes") $htmlout.= "<tr class='highlight'>\n";
@@ -114,12 +115,12 @@ $categories = genrelist();
         $row['cat_pic'] = htmlsafechars($change[$row['category']]['image']);
       $row['min_class'] = htmlsafechars($change[$row['category']]['min_class']);
 $htmlout .="<div style='display:block; height:5px;'></div><a href='details.php?id=$id'><div class='text-center browsepd'>";   
-if (!empty($row["poster"]) && isset($row["cat_pic"]) && $row["cat_pic"] != "") $htmlout.= "<img src='{$INSTALLER09['pic_base_url']}caticons/{$CURUSER['categorie_icon']}/{$row['cat_pic']}' alt='{$row['cat_name']}' class='overlay'><img src='" . htmlsafechars($row["poster"]) . "' alt='Poster' title='Poster' class='tt''>";
+if (!empty($row["poster"]) && isset($row["cat_pic"]) && $row["cat_pic"] != "") $htmlout.= "<img src='{$INSTALLER09['pic_base_url']}caticons/{$CURUSER['categorie_icon']}/{$row['cat_pic']}' alt='{$row['cat_name']}' class='overlay'><img style='width: 200px; height: 300px;' src='" . htmlsafechars($row["poster"]) . "' alt='Poster' title='Poster' class='tt''>";
 if (empty($row["poster"]) && isset($row["cat_pic"]) && $row["cat_pic"] != "") $htmlout.= "<img src='{$INSTALLER09['pic_base_url']}caticons/{$CURUSER['categorie_icon']}/{$row['cat_pic']}' alt='{$row['cat_name']}' class='overlaynp'><img src='{$INSTALLER09['pic_base_url']}noposter.png' class='tt'><br />";
 $htmlout .="</div></a><div style='display:block; height:5px;'></div>";
 $htmlout .="<div class='text-center browsepd'>";
 if ($variant == "mytorrents") $htmlout.= "<a class='btn btn-primary' href=\"download.php?torrent={$id}" . ($CURUSER['ssluse'] == 3 ? "&amp;ssl=1" : "") . "\"><img src='{$INSTALLER09['pic_base_url']}zip.gif' border='0' alt='Download This Torrent!' title='Download This Torrent!' /></a>\n";
-if ($variant == "mytorrents") $htmlout.= "<button class='btn btn-primary'><a href='edit.php?id=" . (int)$row['id'] . "amp;returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "'>{$lang["torrenttable_edit"]}</a></button>\n";
+if ($variant == "mytorrents") $htmlout.= "<button class='button primary'><a href='edit.php?id=" . (int)$row['id'] . "amp;returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "'>{$lang["torrenttable_edit"]}</a></button>\n";
 $htmlout.= ($variant == "index" ? "DOWNLOAD&nbsp;<a class='btn btn-primary' href=\"download.php?torrent={$id}" . ($CURUSER['ssluse'] == 3 ? "&amp;ssl=1" : "") . "\"><img src='{$INSTALLER09['pic_base_url']}zip.gif' border='0' alt='Download This Torrent!' title='Download This Torrent!' /></a></button>" : "");
 if ($variant == "mytorrents") {
             $htmlout.= "test";
@@ -170,23 +171,23 @@ if ($row["type"] == "single") {
   $htmlout.= "Size:&nbsp;". str_replace(" ", " ", mksize($row["size"])) . "\n";  
 if ($row["times_completed"] != 1) $_s = "" . $lang["torrenttable_time_plural"] . "";
         else $_s = "" . $lang["torrenttable_time_singular"] . "";
-        $What_Script_S = (XBT_TRACKER == true ? 'snatches_xbt.php?id=' : 'snatches.php?id=' );
+        $What_Script_S = (XBT_TRACKER == true ? 'snatches_ocelot.php?id=' : 'snatches.php?id=' );
         $htmlout.= "<br />Snatches:<a href='$What_Script_S"."$id'>$_s&nbsp;<b>downloaded</b>&nbsp;" . number_format($row["times_completed"]) . "</a>\n";
         if ($row["seeders"]) {
             if ($variant == "index") {
                 if ($row["leechers"]) $ratio = $row["seeders"] / $row["leechers"];
                 else $ratio = 1;
-                $What_Script_P = (XBT_TRACKER == true ? 'peerlist_xbt.php?id=' : 'peerlist.php?id=' );
+                $What_Script_P = (XBT_TRACKER == true ? 'peerlist_ocelot.php?id=' : 'peerlist.php?id=' );
                 $htmlout.= "<br /><b>Seeders:</b>&nbsp;<b><a href='$What_Script_P"."$id#seeders'><font color='" . get_slr_color($ratio) . "'>" . (int)$row["seeders"] . "</font></a></b>&nbsp;\n";
             } else {
-                $What_Script_P = (XBT_TRACKER == true ? 'peerlist_xbt.php?id=' : 'peerlist.php?id=' );
+                $What_Script_P = (XBT_TRACKER == true ? 'peerlist_ocelot.php?id=' : 'peerlist.php?id=' );
                 $htmlout.= "<br /><b>Seeders:</b>&nbsp;<b><a class='" . linkcolor($row["seeders"]) . "' href='$What_Script_P"."$id#seeders'>" . (int)$row["seeders"] . "</a></b>&nbsp;\n";
             }
         } else {
             $htmlout.= "<br /><b>Seeders:</b>&nbsp;<span class='" . linkcolor($row["seeders"]) . "'>" . (int)$row["seeders"] . "</span>\n";
         }
         if ($row["leechers"]) {
-            $What_Script_P = (XBT_TRACKER == true ? 'peerlist_xbt.php?id=' : 'peerlist.php?id=' );
+            $What_Script_P = (XBT_TRACKER == true ? 'peerlist_ocelot.php?id=' : 'peerlist.php?id=' );
             if ($variant == "index") $htmlout.= "<b><a href='$What_Script_P"."$id#leechers'>" . number_format($row["leechers"]) . "</a></b>\n";
             else $htmlout.= "<b><a class='" . linkcolor($row["leechers"]) . "' href='$What_Script_P"."$id#leechers'>" . (int)$row["leechers"] . "</a></b>\n";
         } else $htmlout.= "<b>Leechers:</b>&nbsp;0\n";
@@ -219,7 +220,7 @@ $htmlout.="<br />
         }    
 $htmlout .= "</div></table><br /></div><div style='display:block;width:5px;'></div>";
      }
-    $htmlout.= "</div></div>\n";
+    $htmlout.= "</div>";
     return $htmlout;
 }
 ?>

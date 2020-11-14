@@ -1,25 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+     _   _   _   _     _   _   _   _   _   _   _ 
+ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+| E | v | i | l )-| T | r | i | n | i | t | y )
+ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+
+*/
 //tvmaze functions converted from former tvrage functions
 define('TBUCKET_DIR', BITBUCKET_DIR . DIRECTORY_SEPARATOR . 'tvmaze');
 if (!is_dir(TBUCKET_DIR)) {
-    mkdir(TBUCKET_DIR);
+    if (!mkdir($concurrentDirectory = TBUCKET_DIR) && !is_dir($concurrentDirectory)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+    }
 }
 
 function tvmaze_format($tvmaze_data, $tvmaze_type) {
@@ -60,7 +63,7 @@ function tvmaze(&$torrents) {
 
     $memkey = 'tvmaze::' . strtolower(str_replace(' ', '', $tvmaze['name']));
     if (($tvmaze_id = $mc1->get_value($memkey)) === false) {
-        //get tvmaze id
+        //get tvrage id
         $tvmaze_link = sprintf('http://api.tvmaze.com/singlesearch/shows?q=%s', urlencode($tvmaze['name']));
         $tvmaze_array = json_decode(file_get_contents($tvmaze_link), true);
         if ($tvmaze_array) {
@@ -76,9 +79,10 @@ function tvmaze(&$torrents) {
         $force_update = true;
     }
 
-    $memkey = 'tvmaze::' . $tvmaze_id;
+    $memkey = 'tvrage::' . $tvmaze_id;
     if ($force_update || ($tvmaze_showinfo = $mc1->get_value($memkey)) === false) {
-        //get tvmaze show info
+        //var_dump('Show from tvrage'); //debug
+        //get tvrage show info
         $tvmaze['name'] = preg_replace('/\d{4}.$/', '', $tvmaze['name']);
         $tvmaze_link = sprintf('http://api.tvmaze.com/shows/%d', $tvmaze_id);
         $tvmaze_array = json_decode(file_get_contents($tvmaze_link), true);

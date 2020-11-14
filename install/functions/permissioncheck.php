@@ -43,7 +43,8 @@ function permissioncheck()
         $root . 'sqlerr_logs/' => 0,
         $root . 'install/' => 0,
         $root . 'install/extra/' => 0,
-        $root . 'include/' => 0
+        $root . 'include/' => 0,
+        $root . 'bucket/' => 0
     );
     checkdir($dirs);
     $continue = true;
