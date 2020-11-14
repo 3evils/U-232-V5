@@ -1,20 +1,20 @@
 <?php
 /**
- |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
- |--------------------------------------------------------------------------|
- |   Licence Info: WTFPL                                                    |
- |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
- |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
- |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
- |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
+|--------------------------------------------------------------------------|
+|   https://github.com/Bigjoos/                                            |
+|--------------------------------------------------------------------------|
+|   Licence Info: WTFPL                                                    |
+|--------------------------------------------------------------------------|
+|   Copyright (C) 2010 U-232 V5                                            |
+|--------------------------------------------------------------------------|
+|   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+|--------------------------------------------------------------------------|
+|   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+|--------------------------------------------------------------------------|
+_   _   _   _   _     _   _   _   _   _   _     _   _   _   _
+/ \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
 ( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
+\_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
  */
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
 require_once (INCL_DIR . 'user_functions.php');
@@ -104,20 +104,20 @@ $psecret = $editsecret;
 //$emails = encrypt_email($email);
 
 $ret = sql_query("INSERT INTO users (username, passhash, secret, editsecret, birthday, country, gender, pin_code, stylesheet, passhint, hintanswer, email, status, " . (!$arr[0] ? "class, " : "") . "added, last_access, time_offset, dst_in_use, free_switch) VALUES (" . implode(",", array_map("sqlesc", array(
-    $wantusername,
-    $wantpasshash,
-    $secret,
-    $editsecret,
-    $birthday,
-    $country,
-    $gender,
-    $pincode,
-    $INSTALLER09['stylesheet'],
-    $passhint,
-    $wanthintanswer,
-    $email,
-    (!$arr[0] || !EMAIL_CONFIRM ? 'confirmed' : 'pending')
-))) . ", " . (!$arr[0] ? UC_SYSOP . ", " : "") . "" . TIME_NOW . "," . TIME_NOW . " , $time_offset, {$dst_in_use['tm_isdst']}, $user_frees)") or sqlerr(__FILE__, __LINE__);
+        $wantusername,
+        $wantpasshash,
+        $secret,
+        $editsecret,
+        $birthday,
+        $country,
+        $gender,
+        $pincode,
+        $INSTALLER09['stylesheet'],
+        $passhint,
+        $wanthintanswer,
+        $email,
+        (!$arr[0] || !EMAIL_CONFIRM ? 'confirmed' : 'pending')
+    ))) . ", " . (!$arr[0] ? UC_SYSOP . ", " : "") . "" . TIME_NOW . "," . TIME_NOW . " , $time_offset, {$dst_in_use['tm_isdst']}, $user_frees)") or sqlerr(__FILE__, __LINE__);
 
 $mc1->delete_value('birthdayusers');
 
@@ -173,10 +173,10 @@ $body = str_replace(array(
     "{$INSTALLER09['baseurl']}/confirm.php?id=$id&secret=$psecret"
 ) , $lang['takesignup_email_body']);
 
-if ($arr[0] || EMAIL_CONFIRM) 
-mail($email, "{$INSTALLER09['site_name']} {$lang['takesignup_confirm']}", $body, "{$lang['takesignup_from']} {$INSTALLER09['site_email']}");
-else 
-$passh = md5($row["passhash"] . $_SERVER["REMOTE_ADDR"]);
+if ($arr[0] || EMAIL_CONFIRM)
+    mail($email, "{$INSTALLER09['site_name']} {$lang['takesignup_confirm']}", $body, "{$lang['takesignup_from']} {$INSTALLER09['site_email']}");
+else
+    $passh = md5($row["passhash"] . $_SERVER["REMOTE_ADDR"]);
 logincookie($id, $passh);
 header("Refresh: 0; url=ok.php?type=". (!$arr[0]? "sysop" : (EMAIL_CONFIRM ? "signup&email=" . urlencode($email) : "confirm")));
 ?>
