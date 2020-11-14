@@ -2176,15 +2176,15 @@ CREATE TABLE IF NOT EXISTS `shit_list` (
 
 CREATE TABLE `shoutbox` (
   `id` bigint(40) NOT NULL,
-  `userid` bigint(6) NOT NULL DEFAULT ''0'',
-  `to_user` int(10) NOT NULL DEFAULT ''0'',
+  `userid` bigint(6) NOT NULL DEFAULT '0',
+  `to_user` int(10) NOT NULL DEFAULT '0',
   `username` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
   `avatar` text COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL DEFAULT ''0'',
+  `date` int(11) NOT NULL DEFAULT '0',
   `text` text CHARACTER SET utf8,
   `text_parsed` text CHARACTER SET utf8,
-  `staff_shout` enum(''yes'',''no'') COLLATE utf8_unicode_ci NOT NULL DEFAULT ''no'',
-  `autoshout` enum(''yes'',''no'') COLLATE utf8_unicode_ci NOT NULL DEFAULT ''no''
+  `staff_shout` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  `autoshout` enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no'
 ) ENGINE=Aria DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2555,11 +2555,11 @@ CREATE TABLE IF NOT EXISTS `topics` (
 --
 
 CREATE TABLE `tmdb` (
-  `movie_id` int(10) UNSIGNED NOT NULL DEFAULT ''0'',
+  `movie_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `movie_likes` text CHARACTER SET utf8 NOT NULL,
-  `tv_id` int(10) UNSIGNED NOT NULL DEFAULT ''0'',
+  `tv_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `tv_likes` text CHARACTER SET utf8 NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL DEFAULT ''0''
+  `user_id` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=Aria DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -2567,43 +2567,43 @@ CREATE TABLE `tmdb` (
 --
 
 INSERT INTO `tmdb` (`movie_id`, `movie_likes`, `tv_id`, `tv_likes`, `user_id`) VALUES
-(0, ''0'', 60735, ''4'', 23),
-(0, '''', 4087, '''', 23),
-(0, '''', 1622, '''', 23),
-(0, '''', 1407, '''', 23),
-(0, '''', 62127, ''1'', 23),
-(0, '''', 607356666, ''1'', 23),
-(0, '''', 2734, ''1'', 23),
-(0, '''', 354912, ''1'', 23),
-(0, '''', 403119, ''1'', 23),
-(0, '''', 460793, ''1'', 23),
-(0, '''', 401981, ''1'', 23),
-(445571, ''1'', 0, '''', 23),
-(268896, ''2'', 0, '''', 26),
-(337167, ''1'', 0, '''', 26),
-(284054, ''3'', 0, '''', 23),
-(507282, ''1'', 0, '''', 23),
-(504255, ''1'', 0, '''', 23),
-(268896, ''1'', 0, '''', 23),
-(368182, ''1'', 0, '''', 23),
-(419831, ''1'', 0, '''', 23),
-(338970, ''2'', 0, '''', 23),
-(284054, ''2'', 0, '''', 26),
-(0, '''', 1402, ''1'', 26),
-(284054, ''1'', 0, '''', 1805),
-(402897, ''1'', 0, '''', 23),
-(338970, ''1'', 0, '''', 26),
-(340022, ''1'', 0, '''', 23),
-(407451, ''1'', 0, '''', 26),
-(433627, ''1'', 0, '''', 23),
-(462718, ''1'', 0, '''', 26),
-(456154, ''1'', 0, '''', 26),
-(278, ''1'', 0, '''', 26),
-(522168, ''1'', 0, '''', 26),
-(498821, ''1'', 0, '''', 26),
-(456086, ''1'', 0, '''', 26),
-(438348, ''1'', 0, '''', 26),
-(491473, ''1'', 0, '''', 26);
+(0, '0', 60735, '4', 23),
+(0, '', 4087, '', 23),
+(0, '', 1622, '', 23),
+(0, '', 1407, '', 23),
+(0, '', 62127, '1', 23),
+(0, '', 607356666, '1', 23),
+(0, '', 2734, '1', 23),
+(0, '', 354912, '1', 23),
+(0, '', 403119, '1', 23),
+(0, '', 460793, '1', 23),
+(0, '', 401981, '1', 23),
+(445571, '1', 0, '', 23),
+(268896, '2', 0, '', 26),
+(337167, '1', 0, '', 26),
+(284054, '3', 0, '', 23),
+(507282, '1', 0, '', 23),
+(504255, '1', 0, '', 23),
+(268896, '1', 0, '', 23),
+(368182, '1', 0, '', 23),
+(419831, '1', 0, '', 23),
+(338970, '2', 0, '', 23),
+(284054, '2', 0, '', 26),
+(0, '', 1402, '1', 26),
+(284054, '1', 0, '', 1805),
+(402897, '1', 0, '', 23),
+(338970, '1', 0, '', 26),
+(340022, '1', 0, '', 23),
+(407451, '1', 0, '', 26),
+(433627, '1', 0, '', 23),
+(462718, '1', 0, '', 26),
+(456154, '1', 0, '', 26),
+(278, '1', 0, '', 26),
+(522168, '1', 0, '', 26),
+(498821, '1', 0, '', 26),
+(456086, '1', 0, '', 26),
+(438348, '1', 0, '', 26),
+(491473, '1', 0, '', 26);
 
 --
 -- Table structure for table `torrents`
