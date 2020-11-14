@@ -1,5 +1,4 @@
 <?php
-//$_NO_COMPRESS = true;
 /**
  |--------------------------------------------------------------------------|
  |   https://github.com/3evils/                                             |
@@ -24,37 +23,27 @@
                | E | v | i | l )-| T | r | i | n | i | t | y )
                 \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
 */
-require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
-require_once (INCL_DIR . 'user_functions.php');
-//require_once INCL_DIR . 'torrenttable_functions_catalogue.php';
-require_once INCL_DIR . 'pager_functions.php';
-require_once (INCL_DIR . 'searchcloud_functions.php');
-require_once (CLASS_DIR . 'class_user_options.php');
-require_once (CLASS_DIR . 'class_user_options_2.php');
-
-dbconn(false);
-loggedinorreturn();
-$stdfoot = array(
-    /** include js **/
-    'js' => array(
-        //'java_klappe',
-        'wz_tooltip'
-    )
-);
-$stdhead = array(
-    /** include css **/
-    'css' => array(
-        /*'browse'*/
-    )
-);
-
-$lang = array_merge(load_language('global') , load_language('browse'), load_language('catalogue') , load_language('torrenttable_functions'));
-if ($CURUSER['design'] == $CURUSER['design']) {
-	require_once DESIGN_DIR . "{$CURUSER['design']}/torrenttable_catalogue.php";
+function docleanup($data)
+{
+    global $INSTALLER09, $queries, $mc1;
+    set_time_limit(1200);
+    ignore_user_abort(1);
+    sql_query("UPDATE `freeslots` SET `addedup` = 0 WHERE `addedup` != 0 AND `addedup` < " . TIME_NOW) or sqlerr(__FILE__, __LINE__);
+    sql_query("UPDATE `freeslots` SET `addedfree` = 0 WHERE `addedfree` != 0 AND `addedfree` < " . TIME_NOW) or sqlerr(__FILE__, __LINE__);
+    if (XBT_TRACKER) {
+        $fsq = sql_query("SELECT fs.userid, t.info_hash FROM `freeslots` AS fs LEFT JOIN `torrents` AS t ON t.id = fs.torrentid WHERE fs.`addedup` = 0 AND fs.`addedfree` = 0")  or sqlerr(__FILE__, __LINE__);
+        while ($row = mysqli_fetch_assoc($fsq)) {
+            require_once(CLASS_DIR . 'tracker.class.php');
+            Tracker::update_tracker('remove_token', array('userid' => $row['userid'], 'info_hash' => rawurlencode($row['info_hash'])));
+        }
+    }
+    sql_query("DELETE FROM `freeslots` WHERE `addedup` = 0 AND `addedfree` = 0") or sqlerr(__FILE__, __LINE__);
+    if ($queries > 0) write_log("Freeslot Clean -------------------- Freeslot Clean Complete using $queries queries--------------------");
+    if (false !== mysqli_affected_rows($GLOBALS["___mysqli_ston"])) {
+        $data['clean_desc'] = mysqli_affected_rows($GLOBALS["___mysqli_ston"]) . " items deleted/updated";
+    }
+    if ($data['clean_log']) {
+        cleanup_log($data);
+    }
 }
-if ($CURUSER['design'] == $CURUSER['design']) {
-	require_once DESIGN_DIR . "{$CURUSER['design']}/browse_catalogue.php";
-}
-//== End Ip logger
-echo stdhead($title, true, $stdhead) . $HTMLOUT . stdfoot($stdfoot);
 ?>

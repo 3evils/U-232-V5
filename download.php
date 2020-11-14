@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
 require_once (INCL_DIR . 'user_functions.php');
 require_once (INCL_DIR . 'function_happyhour.php');
@@ -89,6 +96,10 @@ if (isset($_GET['slot'])) {
         if ($used_slot && $slot['doubleup'] == 'yes') sql_query('UPDATE freeslots SET free = "yes", addedfree = ' . $added . ' WHERE torrentid = ' . $id . ' AND userid = ' . $CURUSER['id'] . ' AND doubleup = "yes"') or sqlerr(__FILE__, __LINE__);
         elseif ($used_slot && $slot['doubleup'] == 'no') sql_query('INSERT INTO freeslots (torrentid, userid, free, addedfree) VALUES (' . sqlesc($id) . ', ' . sqlesc($CURUSER['id']) . ', "yes", ' . $added . ')') or sqlerr(__FILE__, __LINE__);
         else sql_query('INSERT INTO freeslots (torrentid, userid, free, addedfree) VALUES (' . sqlesc($id) . ', ' . sqlesc($CURUSER['id']) . ', "yes", ' . $added . ')') or sqlerr(__FILE__, __LINE__);
+    if(XBT_TRACKER) {
+            require_once(CLASS_DIR . 'tracker.class.php');
+            Tracker::update_tracker('add_token', array('userid' => $CURUSER['id'], 'info_hash' => rawurlencode($row['info_hash'])));
+        }
     }
     /** doubleslot **/
     elseif ($_GET['slot'] == 'double') {
@@ -138,10 +149,14 @@ if (!isset($CURUSER['torrent_pass']) || strlen($CURUSER['torrent_pass']) != 32) 
         'torrent_pass' => $CURUSER['torrent_pass']
     ));
     $mc1->commit_transaction($INSTALLER09['expires']['user_cache']);
+    if (XBT_TRACKER) {
+        require_once(CLASS_DIR . 'tracker.class.php');
+        Tracker::update_tracker('add_user', array('passkey' => rawurlencode($passkey), 'id' => $CURUSER['id'], 'visible' => ($CURUSER['privacy'] != 'normal' ? 1 : 0), 'free_switch' => $CURUSER['free_switch']));
+    }
 }
 $dict = bencdec::decode_file($fn, $INSTALLER09['max_torrent_size']);
 if (XBT_TRACKER == true) {
-    $dict['announce'] = $INSTALLER09['xbt_prefix'] . $CURUSER['torrent_pass'] . $INSTALLER09['xbt_suffix'];
+    $dict['announce'] = $INSTALLER09['ocelot_prefix'] . $CURUSER['torrent_pass'] . $INSTALLER09['ocelot_suffix'];
 } else {
     $dict['announce'] = $INSTALLER09['announce_urls'][$ssluse] . '?torrent_pass=' . $CURUSER['torrent_pass'];
 }
@@ -161,6 +176,7 @@ if ($zipuse) {
             $file_name
         );
         $file_name = $INSTALLER09['torrent_dir'] . '/' . substr(md5(rawurlencode($row['name'])), 0, 6) . '.zip';
+        //$file_name = $INSTALLER09['torrent_dir'].'/'.$row['name'].'.zip';
         $zip->Zip($files, $file_name);
         $zip->forceDownload($file_name);
         unlink($INSTALLER09['torrent_dir'] . '/' . $row['name'] . '.torrent');

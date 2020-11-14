@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 /****
 * Bleach Forums 
 * Rev u-232v5
@@ -73,7 +80,7 @@ $stdhead = array(
         'style2',
         'bbcode',
         'rating_style',
-	'forums'
+		'forum'
     )
 );
 $stdfoot = array(
@@ -263,31 +270,9 @@ $action = (in_array($posted_action, $valid_actions) ? $posted_action : 'view_def
           }
           if ($INSTALLER09['forums_online'] == 0)
           $HTMLOUT .= stdmsg($lang['forum_pg_warn1'], $lang['forum_pg_warn2']);
-          $HTMLOUT .= "<div class='navigation'><a href='index.php'>" . $INSTALLER09["site_name"] . "</a>
-          <br><span class='active'></span></div> <br />";
-	  $ovf_res = sql_query("SELECT id, name, min_class_view FROM over_forums ORDER BY sort ASC") or sqlerr(__FILE__, __LINE__);
-	  while ($ovf_arr = mysqli_fetch_assoc($ovf_res)) {
-	  if ($CURUSER['class'] < $ovf_arr["min_class_view"])
-	  continue;
-          $ovfid = (int)$ovf_arr["id"];
-          $ovfname = htmlsafechars($ovf_arr["name"]);
-          $HTMLOUT .= "<div class='panel panel-default'><div class='panel-heading'>
-          <span class='nav navbar-nav navbar-right'><label for='checkbox_4' class='text-left'>
-          </label></span>";
-          $HTMLOUT .="&nbsp;&nbsp;<strong><a href='{$INSTALLER09['baseurl']}/forums.php?action=forumview&amp;forid=".$ovfid."'>".$ovfname."</a></strong></div>
-          <div class='table table-responsive table-bordered table-hover'>";
-          $HTMLOUT .= show_forums($ovfid, false, $forums, true, true);
-          }
-$HTMLOUT .= "";
-          if ($Multi_forum['configs']['use_forum_stats_mod'])
-          $HTMLOUT .= forum_stats();
-$HTMLOUT .= "<div class='col-sm-12 col-sm-offset-0'>
-          <p align='center'>
-	  <a href='{$INSTALLER09['baseurl']}/forums.php?action=search'><b class='btn btn-default btn-sm'>&nbsp;&nbsp;{$lang['forum_pg_srch']}&nbsp;&nbsp;</b></a>&nbsp;&nbsp; 
-	  <a href='{$INSTALLER09['baseurl']}/forums.php?action=viewunread'><b class='btn btn-default btn-sm'>&nbsp;&nbsp;{$lang['forum_pg_new']}&nbsp;&nbsp;</b></a>&nbsp;&nbsp; 
-	  <a href='{$INSTALLER09['baseurl']}/forums.php?action=getdaily'><b class='btn btn-default btn-sm'>&nbsp;&nbsp;{$lang['forum_pg_24h']}&nbsp;&nbsp;</b></a>&nbsp;&nbsp; 
-	  <a href='{$INSTALLER09['baseurl']}/forums.php?catchup'><b class='btn btn-default btn-sm'>&nbsp;&nbsp;{$lang['forum_pg_mark']}&nbsp;&nbsp;</b></a></p>
-          </div><br /><br />";
+		if ($CURUSER['design'] == $CURUSER['design']) {
+			require_once "./design/{$CURUSER['design']}/forums.php";
+		}
           echo stdhead($lang['forums_forum_heading'], true, $stdhead) . $HTMLOUT . stdfoot($stdfoot);
           exit();
           break;

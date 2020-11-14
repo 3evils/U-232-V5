@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
 require_once (INCL_DIR . 'user_functions.php');
 global $CURUSER;
@@ -26,7 +33,7 @@ $lang = array_merge(load_language('global') , load_language('confirm'));
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $md5 = isset($_GET['secret']) ? $_GET['secret'] : '';
 if (!is_valid_id($id)) stderr("{$lang['confirm_user_error']}", "{$lang['confirm_invalid_id']}");
-if (!preg_match("/^(?:[\d\w]){32}$/", $md5)) {
+if (!preg_match("/^(?:[\w]){32}$/", $md5)) {
     stderr("{$lang['confirm_user_error']}", "{$lang['confirm_invalid_key']}");
 }
 dbconn();

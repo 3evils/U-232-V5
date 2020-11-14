@@ -1,5 +1,4 @@
 <?php
-//$_NO_COMPRESS = true;
 /**
  |--------------------------------------------------------------------------|
  |   https://github.com/3evils/                                             |
@@ -24,37 +23,35 @@
                | E | v | i | l )-| T | r | i | n | i | t | y )
                 \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
 */
-require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
-require_once (INCL_DIR . 'user_functions.php');
-//require_once INCL_DIR . 'torrenttable_functions_catalogue.php';
-require_once INCL_DIR . 'pager_functions.php';
-require_once (INCL_DIR . 'searchcloud_functions.php');
-require_once (CLASS_DIR . 'class_user_options.php');
-require_once (CLASS_DIR . 'class_user_options_2.php');
-
+require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'bittorrent.php');
+require_once(INCL_DIR.'user_functions.php');
+require_once(INCL_DIR.'bbcode_functions.php');
 dbconn(false);
 loggedinorreturn();
-$stdfoot = array(
-    /** include js **/
-    'js' => array(
-        //'java_klappe',
-        'wz_tooltip'
-    )
-);
-$stdhead = array(
-    /** include css **/
-    'css' => array(
-        /*'browse'*/
-    )
-);
+$userid = intval($CURUSER["id"]);
+$torrentid = intval($_POST["torrentid"]);
 
-$lang = array_merge(load_language('global') , load_language('browse'), load_language('catalogue') , load_language('torrenttable_functions'));
-if ($CURUSER['design'] == $CURUSER['design']) {
-	require_once DESIGN_DIR . "{$CURUSER['design']}/torrenttable_catalogue.php";
+if ((!$torrentid))
+    header("Location: browse.php");
+else
+    $checkfreepoll = sql_query("SELECT userid FROM freepoll WHERE torrentid=".sqlesc($torrentid)." AND userid=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);
+$trows = mysqli_fetch_row($checkfreepoll);
+if ($trows[0] > 0) {
+    header("Location: details.php?id=$torrentid&poll=0");
+} else {
+    $res = sql_query("INSERT INTO freepoll (torrentid, userid) VALUES (".sqlesc($torrentid).", ".sqlesc($userid).")") or sqlerr(__FILE__, __LINE__);
+    sql_query("UPDATE users SET seedbonus = seedbonus-".sqlesc($INSTALLER09['torrent']['freepoll_points'])." WHERE id=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);  
+    $update['seedbonus_donator'] = ($CURUSER['seedbonus'] - $INSTALLER09['torrent']['freepoll_points']);
+    $mc1->begin_transaction('userstats_' . $CURUSER["id"]);
+    $mc1->update_row(false, array(
+    'seedbonus' => $update['seedbonus_donator']
+));
+    $mc1->commit_transaction($INSTALLER09['expires']['u_stats']);
+    $mc1->begin_transaction('user_stats_' . $CURUSER["id"]);
+    $mc1->update_row(false, array(
+    'seedbonus' => $update['seedbonus_donator']
+));
+$mc1->commit_transaction($INSTALLER09['expires']['user_stats']);
+    header("Location: details.php?id=$torrentid");
 }
-if ($CURUSER['design'] == $CURUSER['design']) {
-	require_once DESIGN_DIR . "{$CURUSER['design']}/browse_catalogue.php";
-}
-//== End Ip logger
-echo stdhead($title, true, $stdhead) . $HTMLOUT . stdfoot($stdfoot);
 ?>

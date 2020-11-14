@@ -1,21 +1,28 @@
 <?php
 /**
  |--------------------------------------------------------------------------|
- |   https://github.com/Bigjoos/                                            |
+ |   https://github.com/3evils/                                             |
  |--------------------------------------------------------------------------|
  |   Licence Info: WTFPL                                                    |
  |--------------------------------------------------------------------------|
- |   Copyright (C) 2010 U-232 V5                                            |
+ |   Copyright (C) 2020 Evil-Trinity                                        |
  |--------------------------------------------------------------------------|
- |   A bittorrent tracker source based on TBDev.net/tbsource/bytemonsoon.   |
+ |   A bittorrent tracker source based on an unreleased U-232               |
  |--------------------------------------------------------------------------|
- |   Project Leaders: Mindless, Autotron, whocares, Swizzles.               |
+ |   Project Leaders: AntiMidas,  Seeder                                    |
  |--------------------------------------------------------------------------|
-  _   _   _   _   _     _   _   _   _   _   _     _   _   _   _
- / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \   / \ / \ / \ / \
-( U | - | 2 | 3 | 2 )-( S | o | u | r | c | e )-( C | o | d | e )
- \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/
- */
+ |   All other snippets, mods and contributions for this version from:      |
+ | CoLdFuSiOn, *putyn, pdq, djGrrr, Retro, elephant, ezero, Alex2005,       |
+ | system, sir_Snugglebunny, laffin, Wilba, Traffic, dokty, djlee, neptune, |
+ | scars, Raw, soft, jaits, Melvinmeow, RogueSurfer, stoner, Stillapunk,    |
+ | swizzles, autotron, stonebreath, whocares, Tundracanine , son            |
+ |                                                                                                                            |
+ |--------------------------------------------------------------------------|
+                 _   _   _   _     _   _   _   _   _   _   _
+                / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \
+               | E | v | i | l )-| T | r | i | n | i | t | y )
+                \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/
+*/
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'bittorrent.php');
 require_once (INCL_DIR . 'user_functions.php');
 require_once (INCL_DIR . 'function_memcache.php');
@@ -43,22 +50,26 @@ function deletetorrent($id)
     unlink("{$INSTALLER09['torrent_dir']}/$id.torrent");
     $mc1->delete_value('MyPeers_' . $CURUSER['id']);
 }
-function deletetorrent_xbt($id)
+function deletetorrent_ocelot($id)
 {
    global $INSTALLER09, $mc1, $CURUSER, $lang;
-   sql_query("UPDATE torrents SET flags = 1 WHERE id = ".sqlesc($id)) or sqlerr(__FILE__, __LINE__);
-   sql_query("DELETE files.*, comments.*, thankyou.*, thanks.*, thumbsup.*, bookmarks.*, coins.*, rating.*, xbt_peers.* FROM xbt_peers
-                                     LEFT JOIN files ON files.torrent = xbt_peers.tid
-                                     LEFT JOIN comments ON comments.torrent = xbt_peers.tid
-                                     LEFT JOIN thankyou ON thankyou.torid = xbt_peers.tid
-                                     LEFT JOIN thanks ON thanks.torrentid = xbt_peers.tid
-                                     LEFT JOIN bookmarks ON bookmarks.torrentid = xbt_peers.tid
-                                     LEFT JOIN coins ON coins.torrentid = xbt_peers.tid
-                                     LEFT JOIN rating ON rating.torrent = xbt_peers.tid
-                                     LEFT JOIN thumbsup ON thumbsup.torrentid = xbt_peers.tid
-                                     WHERE xbt_peers.tid =" . sqlesc($id)) or sqlerr(__FILE__, __LINE__);
+   $res = sql_query('SELECT info_hash FROM torrents WHERE id = ' . sqlesc($id)) or sqlerr(__FILE__, __LINE__);
+   $row = mysqli_fetch_assoc($res);
+   sql_query("DELETE files.*, comments.*, thankyou.*, thanks.*, thumbsup.*, bookmarks.*, coins.*, rating.*, xbt_files_users.*, torrents.* FROM torrents
+                                     LEFT JOIN files ON files.torrent = torrents.id
+                                     LEFT JOIN comments ON comments.torrent = torrents.id
+                                     LEFT JOIN thankyou ON thankyou.torid = torrents.id
+                                     LEFT JOIN thanks ON thanks.torrentid = torrents.id
+                                     LEFT JOIN bookmarks ON bookmarks.torrentid = torrents.id
+                                     LEFT JOIN coins ON coins.torrentid = torrents.id
+                                     LEFT JOIN rating ON rating.torrent = torrents.id
+                                     LEFT JOIN thumbsup ON thumbsup.torrentid = torrents.id
+                                     LEFT JOIN xbt_files_users ON xbt_files_users.fid = torrents.id
+                                     WHERE torrents.id =" . sqlesc($id)) or sqlerr(__FILE__, __LINE__);
         unlink("{$INSTALLER09['torrent_dir']}/$id.torrent");
-        $mc1->delete_value('MyPeers_XBT_' . $CURUSER['id']);
+        $mc1->delete_value('MyPeers_OCELOT_' . $CURUSER['id']);
+        require_once(CLASS_DIR . 'tracker.class.php');
+        Tracker::update_tracker('delete_torrent', array('info_hash' => rawurlencode($row['info_hash']), 'reason' => -1, 'id' => $id));
     }
 $res = sql_query("SELECT name, owner, seeders FROM torrents WHERE id =" . sqlesc($id));
 $row = mysqli_fetch_assoc($res);
@@ -78,7 +89,7 @@ elseif ($rt == 4) {
     $reasonstr = trim($reason[3]);
 }
 if (XBT_TRACKER == true) {
-deletetorrent_xbt($id);
+deletetorrent_ocelot($id);
 } else {
 deletetorrent($id);
 remove_torrent_peers($id);
